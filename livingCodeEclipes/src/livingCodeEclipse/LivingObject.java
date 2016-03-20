@@ -1,6 +1,5 @@
 package livingCodeEclipse;
 
-import java.awt.dnd.DnDConstants;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -8,15 +7,18 @@ class LivingObject {
 	int life = 10;
 	boolean living = true;
 	int yPosition = 7;
-	Integer[] codeDna = new Integer[30];
+	Integer[] codeDna = new Integer[20];
+	Integer[] heritige = new Integer[1000];
+	int children = 0;
+	int generation = 1;
 	int timeLiving = 0;
 	static int yPositionMin = -10;
 	static int yPositionMax = 10;
 	Random random = new Random();
 	
 	public void init(){
-//		yPosition = yPositionMin + (int)((random.nextInt(100)/100.0) * ((yPositionMax - yPositionMin) + 1));
-		boolean isInIf = false;
+		yPosition = yPositionMin + (int)((random.nextInt(100)/100.0) * ((yPositionMax - yPositionMin) + 1));
+		life = random.nextInt(10)+5;
 		for (int i = 0; i < codeDna.length;i++) {
 			genarateDna(i);
 		}
@@ -25,9 +27,10 @@ class LivingObject {
 	void genarateDna(int i) {
 		String command;
 		boolean isInIf = checkIfInIf(i);
+//		System.out.println(isInIf);
 		if (i != 0 && LivingCode.commands[codeDna[i-1]] == "if") {
 			command = LivingCode.variables[random.nextInt(LivingCode.variables.length)];
-		} else if (i != 0 && isInIf) {
+		} else if (isInIf) {
 			command = LivingCode.methods[random.nextInt(LivingCode.methods.length)];
 		} else {
 			command = LivingCode.methods[random.nextInt(LivingCode.methods.length-1)];
@@ -49,6 +52,8 @@ class LivingObject {
 			} else if (command == "endif" && !isInIf) {
 				genarateDna(i);
 			} else if (Arrays.asList(LivingCode.variables).indexOf(command) != -1 && LivingCode.commands[codeDna[i-1]] != "if") {
+				genarateDna(i);
+			} else if (command == "if" && isInIf) {
 				genarateDna(i);
 			}
 		}
