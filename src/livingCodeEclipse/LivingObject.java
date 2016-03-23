@@ -131,5 +131,11 @@ class LivingObject {
 	void goUp() {
 		yPosition +=1;
 	}
+	
+	static class IfData {
+		
+		String stringIfArg = "";
+		boolean ifArg = false;
+	}
 
 }

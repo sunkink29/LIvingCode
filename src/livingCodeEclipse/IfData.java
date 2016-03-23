@@ -1,7 +1,7 @@
-package livingCodeEclipse;
-
-class IfData {
-	
-	String stringIfArg = "";
-	boolean ifArg = false;
-}
+//package livingCodeEclipse;
+//
+//class IfData {
+//	
+//	String stringIfArg = "";
+//	boolean ifArg = false;
+//}
