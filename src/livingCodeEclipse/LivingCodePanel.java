@@ -1,9 +1,6 @@
 package livingCodeEclipse;
 import java.awt.*;
-import java.util.Arrays;
-
 import javax.swing.*;
-
 
 public class LivingCodePanel extends JPanel {
 	
@@ -28,12 +25,14 @@ public class LivingCodePanel extends JPanel {
 				content.hasDrawnObjects = false;
 				content.mainLivingCode.update();
 				content.repaint();
-				for (int i=0;i<content.mainLivingCode.longestLived.codeDna.length;i++) {
-					System.out.print(LivingCode.commands[content.mainLivingCode.longestLived.codeDna[i]]+" ");
+				for (int i=0;i<content.mainLivingCode.livingObjects[0].codeDna.length;i++) {
+//					System.out.print(LivingCode.commands[content.mainLivingCode.livingObjects[0].codeDna[i]]+" ");
 				}
-				System.out.println();
+//				System.out.println();
+//				System.out.println(content.mainLivingCode.livingObjects[2].pointInCode);
 			}
 		}
+		System.out.println("finished");
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -42,7 +41,7 @@ public class LivingCodePanel extends JPanel {
 		int hight = getHeight();
 		int boxSize = 5;
 		int perfectRangeMid = hight/2;
-		int yPosStepHight = 2;
+		int yPosStepHight = 3;
 		int margin = (width - boxSize * mainLivingCode.livingObjects.length) / mainLivingCode.livingObjects.length;
 		Color currentColor;
 		currentColor = Color.BLACK;

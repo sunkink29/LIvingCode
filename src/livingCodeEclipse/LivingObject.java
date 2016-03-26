@@ -18,6 +18,8 @@ class LivingObject {
 	static int yPositionMin = -10;
 	static int yPositionMax = 10;
 	Random random = new Random();
+	int pointInCode = 0;
+	IfData currentIfData = null;
 	
 	public void init(){
 		color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
@@ -78,9 +80,14 @@ class LivingObject {
 	}
 	
 	public void runDna() {
-		IfData ifData = null;
+		IfData ifData = currentIfData;
 		String method = "";
-		for(int i = 0; i < codeDna.length; i++) {
+		if (pointInCode>=codeDna.length) {
+			pointInCode = 0;
+			ifData = null;
+		}
+		main:
+		for(int i = pointInCode; i < codeDna.length; i++) {
 			switch (LivingCode.commands[codeDna[i]]) {
 				case "if": ifData = new IfData();
 					break;
@@ -114,16 +121,24 @@ class LivingObject {
 			if (ifData != null && ifData.ifArg) {
 				switch (method) {
 					case "down": goDown();
-						break;
+						currentIfData = ifData;
+						pointInCode = i+1;
+						break main;
 					case "up": goUp();
-						break;
+						currentIfData = ifData;
+						pointInCode = i+1;
+						break main;
 				}
 			} else if (ifData == null) {
 				switch (method) {
 					case "down": goDown();
-						break;
+						currentIfData = ifData;
+						pointInCode = i+1;
+						break main;
 					case "up": goUp();
-						break;
+						currentIfData = ifData;
+						pointInCode = i+1;
+						break main;
 				}
 			}
 		}
@@ -139,7 +154,7 @@ class LivingObject {
 	
 	static class IfData {
 		
-		String stringIfArg = "";
+		String stringIfArg = null;
 		boolean ifArg = false;
 	}
 

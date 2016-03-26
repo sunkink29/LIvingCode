@@ -66,14 +66,14 @@ public class LivingCode {
 	public void update() {
 		for(int i = 0; i < livingObjects.length; i++) {
 			if (livingObjects[i].living) {
-				if (random.nextInt(2) == 2) {
+				if (random.nextInt(1) == 1) {
 					livingObjects[i].yPosition++;
 				} else {
 					livingObjects[i].yPosition--;
 				}
 				//System.out.println(Arrays.toString(livingObjects[i].codeDna));
 				livingObjects[i].runDna();
-				if (livingObjects[i].yPosition > 5 || livingObjects[i].yPosition < -5) {
+				if (livingObjects[i].yPosition > livingObjects[i].yPositionMax || livingObjects[i].yPosition < livingObjects[i].yPositionMin) {
 					livingObjects[i].life--;
 				} 
 				if (livingObjects[i].life <= 0) {
@@ -82,7 +82,7 @@ public class LivingCode {
 					totalTimeAlive += livingObjects[i].timeLiving;
 					continue;
 				}
-				if (livingObjects[i].timeLiving % 6 == 0) {
+				if (livingObjects[i].timeLiving % 12 == 0) {
 					for( int j = 0; j < livingObjects.length; j++) {
 						if (!livingObjects[j].living) {
 							livingObjects[j] = new LivingObject();
@@ -101,7 +101,7 @@ public class LivingCode {
 							int rgbRandomInt = random.nextInt(2);
 							int randomint = 10;
 							if (rgbRandomInt == 0) {
-								if (random.nextBoolean() && red + 10 >= 255){
+								if (random.nextBoolean() && red + 10 <= 255){
 									red += random.nextInt(randomint);
 								} else if (red >= randomint) {
 									red -= random.nextInt(randomint);
@@ -109,7 +109,7 @@ public class LivingCode {
 									red -= random.nextInt(red);
 								}
 							} else if(rgbRandomInt == 1) {
-								if (random.nextBoolean() && green + 10 >= 255) {
+								if (random.nextBoolean() && green + 10 <= 255) {
 									green += random.nextInt(randomint);
 								} else if (green >= randomint) {
 									green -= random.nextInt(randomint);
@@ -117,7 +117,7 @@ public class LivingCode {
 									green -= random.nextInt(green);
 								}
 							} else {
-								if (random.nextBoolean() && blue + 10 >= 255) {
+								if (random.nextBoolean() && blue + 10 <= 255) {
 									blue += random.nextInt(randomint);
 								} else if(blue >= randomint) {
 									blue -= random.nextInt(randomint);
