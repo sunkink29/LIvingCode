@@ -1,5 +1,6 @@
 package livingCodeEclipse;
 
+import java.awt.Color;
 import java.util.Random;
 
 public class LivingCode {
@@ -7,7 +8,7 @@ public class LivingCode {
 	static String[] commands = {"if","up","light","down","!light","endIf"};
 	static String[] methods = {"down","up","if","endIf"};
 	static String[] variables = {"light","!light"};
-	LivingObject[] livingObjects = new LivingObject[100];
+	LivingObject[] livingObjects;
 	int longestLiving = 0;
 	LivingObject longestLived;
 	int totalTime = 0;
@@ -15,6 +16,14 @@ public class LivingCode {
 	float totalChildern = 0;
 	float totalTimeAlive = 0;
 	Random random = new Random();
+	
+	public LivingCode() {
+		livingObjects = new LivingObject[10];
+	}
+	
+	public LivingCode(int num) {
+		livingObjects = new LivingObject[num];
+	}
 
 	public static void main(String[] args) {
 		LivingCode mainObject = new LivingCode();
@@ -86,6 +95,37 @@ public class LivingCode {
 							livingObjects[j].generation ++;
 							livingObjects[i].children ++;
 							livingObjects[j].heritige[livingObjects[j].generation] = livingObjects[i].children;
+							int red = livingObjects[i].color.getRed();
+							int green = livingObjects[i].color.getGreen();
+							int blue = livingObjects[i].color.getGreen();
+							int rgbRandomInt = random.nextInt(2);
+							int randomint = 10;
+							if (rgbRandomInt == 0) {
+								if (random.nextBoolean() && red + 10 >= 255){
+									red += random.nextInt(randomint);
+								} else if (red >= randomint) {
+									red -= random.nextInt(randomint);
+								} else {
+									red -= random.nextInt(red);
+								}
+							} else if(rgbRandomInt == 1) {
+								if (random.nextBoolean() && green + 10 >= 255) {
+									green += random.nextInt(randomint);
+								} else if (green >= randomint) {
+									green -= random.nextInt(randomint);
+								} else {
+									green -= random.nextInt(green);
+								}
+							} else {
+								if (random.nextBoolean() && blue + 10 >= 255) {
+									blue += random.nextInt(randomint);
+								} else if(blue >= randomint) {
+									blue -= random.nextInt(randomint);
+								} else {
+									blue -= random.nextInt(blue);
+								}
+							}
+							livingObjects[j].color = new Color(red, green, blue);
 							amountSpawned++;
 							break;
 						}

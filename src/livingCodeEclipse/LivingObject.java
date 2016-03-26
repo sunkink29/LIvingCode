@@ -1,9 +1,11 @@
 package livingCodeEclipse;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.Random;
 
 class LivingObject {
+	int maxLife = 10;
 	int life = 10;
 	boolean living = true;
 	int yPosition = 7;
@@ -12,13 +14,16 @@ class LivingObject {
 	int children = 0;
 	int generation = 1;
 	int timeLiving = 0;
+	Color color;
 	static int yPositionMin = -10;
 	static int yPositionMax = 10;
 	Random random = new Random();
 	
 	public void init(){
+		color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 		yPosition = yPositionMin + (int)((random.nextInt(100)/100.0) * ((yPositionMax - yPositionMin) + 1));
-		life = random.nextInt(10)+5;
+		maxLife = random.nextInt(10)+5;
+		life = maxLife;
 		for (int i = 0; i < codeDna.length;i++) {
 			genarateDna(i);
 		}
