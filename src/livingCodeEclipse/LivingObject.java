@@ -6,25 +6,34 @@ import java.util.Random;
 
 class LivingObject {
 	int maxLife = 10;
-	int life = 10;
+	int life;
 	boolean living = true;
 	int yPosition = 7;
-	Integer[] codeDna = new Integer[20];
+	Integer[] codeDna = new Integer[15];
 	Integer[] heritige = new Integer[1000];
 	int children = 0;
 	int generation = 1;
 	int timeLiving = 0;
 	Color color;
-	static int yPositionMin = -10;
-	static int yPositionMax = 10;
+	static int spawnYMin = 10;
+	static int spawnYMax = 15;
+	static int yPositionMin;
+	static int yPositionMax;
+	static int safezoneHight = 6;
+	static int safeMid = 0;
 	Random random = new Random();
 	int pointInCode = 0;
 	IfData currentIfData = null;
 	
+	public LivingObject(long seed) {
+		random.setSeed(seed);
+		LivingCode.changeMidOfSafeZone(safeMid);
+	}
+	
 	public void init(){
 		color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-		yPosition = yPositionMin + (int)((random.nextInt(100)/100.0) * ((yPositionMax - yPositionMin) + 1));
-		maxLife = random.nextInt(10)+5;
+		yPosition = spawnYMin + (int)((random.nextInt(100)/100.0) * ((spawnYMax - spawnYMin) + 1));
+		maxLife = random.nextInt(10)+maxLife;
 		life = maxLife;
 		for (int i = 0; i < codeDna.length;i++) {
 			genarateDna(i);
@@ -35,15 +44,17 @@ class LivingObject {
 		String command;
 		boolean isInIf = checkIfInIf(i);
 //		System.out.println(isInIf);
-		if (i != 0 && LivingCode.commands[codeDna[i-1]] == "if") {
+		if (i >= 1 && LivingCode.commands[codeDna[i-1]] == "if") {
 			command = LivingCode.variables[random.nextInt(LivingCode.variables.length)];
-		} else if (isInIf) {
+		} else if (i >= 2 && LivingCode.commands[codeDna[i-2]] == "if") {
 			command = LivingCode.methods[random.nextInt(LivingCode.methods.length)];
+		} else if (i >= 3 && LivingCode.commands[codeDna[i-3]] == "if"){
+			command = "endIf";
 		} else {
-			command = LivingCode.methods[random.nextInt(LivingCode.methods.length-1)];
+			command = "if"; /*LivingCode.methods[random.nextInt(LivingCode.methods.length)];*/
 		}
 		if (command == "if" && isInIf) {
-			command = LivingCode.methods[random.nextInt(LivingCode.methods.length-2)];
+			command = LivingCode.methods[random.nextInt(LivingCode.methods.length-1)];
 		}
 		codeDna[i] = java.util.Arrays.asList(LivingCode.commands).indexOf(command);
 	}
@@ -52,11 +63,9 @@ class LivingObject {
 		for (int i = 0;i<codeDna.length;i++) {
 			String command = LivingCode.commands[codeDna[i]];
 			isInIf = checkIfInIf(i);
-			if (i != 0 && LivingCode.commands[codeDna[i-1]] == "if") {
-				if (Arrays.asList(LivingCode.variables).indexOf(command) == -1) {
-					genarateDna(i);
-				}
-			} else if (command == "endif" && !isInIf) {
+			if (i != 0 && LivingCode.commands[codeDna[i-1]] == "if" && Arrays.asList(LivingCode.variables).indexOf(command) == -1) {
+				genarateDna(i);
+			} else if (command == "endif" && !isInIf || i >= 3 && LivingCode.commands[codeDna[i-3]] == "if") {
 				genarateDna(i);
 			} else if (Arrays.asList(LivingCode.variables).indexOf(command) != -1 && LivingCode.commands[codeDna[i-1]] != "if") {
 				genarateDna(i);
@@ -89,7 +98,7 @@ class LivingObject {
 		main:
 		for(int i = pointInCode; i < codeDna.length; i++) {
 			switch (LivingCode.commands[codeDna[i]]) {
-				case "if": ifData = new IfData();
+				case "if": ifData = new IfData(); System.out.println("if");
 					break;
 				case "endIf": ifData = null;
 					break;

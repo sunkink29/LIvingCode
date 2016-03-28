@@ -5,7 +5,7 @@ import javax.swing.*;
 public class LivingCodePanel extends JPanel {
 	
 	boolean hasDrawnObjects = false;
-	LivingCode mainLivingCode = new LivingCode(10);
+	LivingCode mainLivingCode = new LivingCode(40);
 	
 	public static void main(String[] args) {
 		JFrame window = new JFrame("LivingCode");
@@ -19,30 +19,33 @@ public class LivingCodePanel extends JPanel {
         content.setBackground(background);
         window.setVisible(true);
         long lastPaint = System.currentTimeMillis();
-		while (content.mainLivingCode.longestLiving < 100 && content.mainLivingCode.totalTime != 1000) {
-			if (content.hasDrawnObjects && System.currentTimeMillis() - lastPaint == 250) {
+		while (content.mainLivingCode.longestLiving < 1000 && content.mainLivingCode.totalTime != 10000) {
+//			System.out.println(System.currentTimeMillis()-lastPaint+" | "+ content.hasDrawnObjects);
+			if (content.hasDrawnObjects && System.currentTimeMillis() - lastPaint >= 100) {
 				lastPaint = System.currentTimeMillis();
 				content.hasDrawnObjects = false;
 				content.mainLivingCode.update();
 				content.repaint();
-				for (int i=0;i<content.mainLivingCode.livingObjects[0].codeDna.length;i++) {
-//					System.out.print(LivingCode.commands[content.mainLivingCode.livingObjects[0].codeDna[i]]+" ");
+				for (int i=0;i<content.mainLivingCode.longestLived.codeDna.length;i++) {
+					System.out.print(LivingCode.commands[content.mainLivingCode.longestLived.codeDna[i]]+" ");
 				}
-//				System.out.println();
-//				System.out.println(content.mainLivingCode.livingObjects[2].pointInCode);
+				System.out.println();
+				System.out.println(content.mainLivingCode.livingObjects[2].pointInCode);
 			}
 		}
-		System.out.println("finished");
+		System.out.println("finished"+" | "+content.mainLivingCode.randNumGenSeed);
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		int width = getWidth();
 		int hight = getHeight();
-		int boxSize = 5;
+//		int margin = 15;
+//		int boxSize = (width - margin * mainLivingCode.livingObjects.length+margin) / mainLivingCode.livingObjects.length;
 		int perfectRangeMid = hight/2;
 		int yPosStepHight = 3;
-		int margin = (width - boxSize * mainLivingCode.livingObjects.length) / mainLivingCode.livingObjects.length;
+		int boxSize = 5;
+		int margin = (width - boxSize * mainLivingCode.livingObjects.length) / (mainLivingCode.livingObjects.length+1);
 		Color currentColor;
 		currentColor = Color.BLACK;
 		g.setColor(currentColor);

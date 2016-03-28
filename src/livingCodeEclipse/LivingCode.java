@@ -6,7 +6,7 @@ import java.util.Random;
 public class LivingCode {
 
 	static String[] commands = {"if","up","light","down","!light","endIf"};
-	static String[] methods = {"down","up","if","endIf"};
+	static String[] methods = {"down","up","if"};
 	static String[] variables = {"light","!light"};
 	LivingObject[] livingObjects;
 	int longestLiving = 0;
@@ -16,13 +16,33 @@ public class LivingCode {
 	float totalChildern = 0;
 	float totalTimeAlive = 0;
 	Random random = new Random();
+	static int defaltNumOfObjects = 20;
+	long randNumGenSeed = -7037298216489777049l;
 	
 	public LivingCode() {
-		livingObjects = new LivingObject[10];
+		this(defaltNumOfObjects,0);
 	}
 	
 	public LivingCode(int num) {
+		this(num,0);
+	}
+	
+	public LivingCode(long seed) {
+		this(defaltNumOfObjects, seed);
+	}
+	
+	public LivingCode(int num, long seed) {
 		livingObjects = new LivingObject[num];
+		if (randNumGenSeed == 0) {
+		randNumGenSeed = random.nextLong();
+		}
+		random.setSeed(randNumGenSeed);
+	}
+	
+	static void changeMidOfSafeZone(int mid) {
+		LivingObject.yPositionMax = mid + LivingObject.safezoneHight/2;
+		LivingObject.yPositionMin = mid - LivingObject.safezoneHight/2;
+		LivingObject.safeMid = mid;
 	}
 
 	public static void main(String[] args) {
@@ -52,11 +72,12 @@ public class LivingCode {
 		System.out.println();
 		System.out.println(mainObject.longestLived.timeLiving +" | "+mainObject.longestLived.living+" | "+ mainObject.totalChildern/mainObject.amountSpawned+" | "+mainObject.totalTimeAlive/mainObject.amountSpawned);
 		System.out.println(mainObject.amountSpawned + " " + mainObject.totalTime);
+		System.out.println(mainObject.randNumGenSeed);
 	}
 	
 	public void init() {
 		for(int i = 0; i < livingObjects.length; i++){
-			livingObjects[i] = new LivingObject();
+			livingObjects[i] = new LivingObject(random.nextLong());
 			livingObjects[i].init();
 			amountSpawned++;
 			livingObjects[i].heritige[0] = amountSpawned;
@@ -66,14 +87,14 @@ public class LivingCode {
 	public void update() {
 		for(int i = 0; i < livingObjects.length; i++) {
 			if (livingObjects[i].living) {
-				if (random.nextInt(1) == 1) {
-					livingObjects[i].yPosition++;
-				} else {
-					livingObjects[i].yPosition--;
-				}
-				//System.out.println(Arrays.toString(livingObjects[i].codeDna));
+//				int goUpOrDown = random.nextInt(1);
+//				if (goUpOrDown == 1) {
+//					livingObjects[i].yPosition++;
+//				} else if (goUpOrDown == 5) {
+//					livingObjects[i].yPosition--;
+//				}
 				livingObjects[i].runDna();
-				if (livingObjects[i].yPosition > livingObjects[i].yPositionMax || livingObjects[i].yPosition < livingObjects[i].yPositionMin) {
+				if (livingObjects[i].yPosition > LivingObject.yPositionMax || livingObjects[i].yPosition < LivingObject.yPositionMin) {
 					livingObjects[i].life--;
 				} 
 				if (livingObjects[i].life <= 0) {
@@ -82,11 +103,12 @@ public class LivingCode {
 					totalTimeAlive += livingObjects[i].timeLiving;
 					continue;
 				}
-				if (livingObjects[i].timeLiving % 12 == 0) {
+				if (livingObjects[i].timeLiving % 10 == 0) {
 					for( int j = 0; j < livingObjects.length; j++) {
 						if (!livingObjects[j].living) {
-							livingObjects[j] = new LivingObject();
+							livingObjects[j] = new LivingObject(random.nextLong());
 							livingObjects[j].init();
+							livingObjects[j].yPosition = livingObjects[i].yPosition;
 							livingObjects[j].codeDna = livingObjects[i].codeDna;
 							livingObjects[j].genarateDna(random.nextInt(livingObjects[j].codeDna.length));
 							livingObjects[j].fixCode();
@@ -101,7 +123,7 @@ public class LivingCode {
 							int rgbRandomInt = random.nextInt(2);
 							int randomint = 10;
 							if (rgbRandomInt == 0) {
-								if (random.nextBoolean() && red + 10 <= 255){
+								if (random.nextBoolean() && red + 10 <= 255 || red == 0){
 									red += random.nextInt(randomint);
 								} else if (red >= randomint) {
 									red -= random.nextInt(randomint);
@@ -109,7 +131,7 @@ public class LivingCode {
 									red -= random.nextInt(red);
 								}
 							} else if(rgbRandomInt == 1) {
-								if (random.nextBoolean() && green + 10 <= 255) {
+								if (random.nextBoolean() && green + 10 <= 255 || green == 0) {
 									green += random.nextInt(randomint);
 								} else if (green >= randomint) {
 									green -= random.nextInt(randomint);
@@ -117,7 +139,7 @@ public class LivingCode {
 									green -= random.nextInt(green);
 								}
 							} else {
-								if (random.nextBoolean() && blue + 10 <= 255) {
+								if (random.nextBoolean() && blue + 10 <= 255 || blue == 0) {
 									blue += random.nextInt(randomint);
 								} else if(blue >= randomint) {
 									blue -= random.nextInt(randomint);
@@ -141,7 +163,7 @@ public class LivingCode {
 		if (random.nextInt(5) == 5){
 			for (int i = 0; i < livingObjects.length; i++) {
 				if (!livingObjects[i].living) {
-					livingObjects[i] = new LivingObject();
+					livingObjects[i] = new LivingObject(random.nextLong());
 					livingObjects[i].init();
 					amountSpawned++;
 					break;
@@ -149,7 +171,8 @@ public class LivingCode {
 			}
 		}
 		totalTime++;
+//		if (longestLiving == 100 && longestLived.living) {
+//			changeMidOfSafeZone(random.nextInt(livingObjects));
+//		}
 	}
-	
-	
 }
