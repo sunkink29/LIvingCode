@@ -17,7 +17,7 @@ public class LivingCode {
 	float totalTimeAlive = 0;
 	Random random = new Random();
 	static int defaltNumOfObjects = 20;
-	long randNumGenSeed = -7037298216489777049l;
+	long randNumGenSeed;
 	
 	public LivingCode() {
 		this(defaltNumOfObjects,0);

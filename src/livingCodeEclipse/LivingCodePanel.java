@@ -20,7 +20,7 @@ public class LivingCodePanel extends JPanel {
         window.setVisible(true);
         long lastPaint = System.currentTimeMillis();
 		while (content.mainLivingCode.longestLiving < 1000 && content.mainLivingCode.totalTime != 10000) {
-//			System.out.println(System.currentTimeMillis()-lastPaint+" | "+ content.hasDrawnObjects);
+			System.out.println(System.currentTimeMillis()-lastPaint+" | "+ content.hasDrawnObjects);
 			if (content.hasDrawnObjects && System.currentTimeMillis() - lastPaint >= 100) {
 				lastPaint = System.currentTimeMillis();
 				content.hasDrawnObjects = false;
